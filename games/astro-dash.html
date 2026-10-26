@@ -252,6 +252,9 @@
       score = 0;
       speed = 5.8;
       frame = 0;
+      obsTimer = 20;
+      orbTimer = 10;
+      scoreAcc = 0;
       started = false;
       dead = false;
       invuln = 0;
@@ -535,14 +538,19 @@
         }
       }
 
-      const spawnRate = Math.max(32, 55 - Math.floor(speed * 2.8));
-      if (frame % spawnRate === 0) spawnObstacle();
-      if (frame % 40 === 0) spawnOrb();
+      const spawnRate = Math.max(28, 50 - speed * 2.2);
+      obsTimer += step;
+      orbTimer += step;
+      if (obsTimer >= spawnRate) { obsTimer = 0; spawnObstacle(); }
+      if (orbTimer >= 35) { orbTimer = 0;
+      scoreAcc = 0; spawnOrb(); }
 
       obstacles.forEach(o => o.y += speed * step);
       orbs.forEach(o => o.y += speed * step);
 
-      if (frame % 5 === 0) {
+      scoreAcc = (scoreAcc || 0) + step;
+      if (scoreAcc >= 4) {
+        scoreAcc = 0;
         score += 1;
         document.getElementById('score').textContent = score;
       }

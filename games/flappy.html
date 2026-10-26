@@ -64,7 +64,7 @@
 
     function reset() {
       bird = { x: 100, y: H/2, vy: 0, r: 18, rot: 0 };
-      pipes = []; score = 0; frame = 0; started = false; dead = false;
+      pipes = []; score = 0; frame = 0; pipeTimer = 40; started = false; dead = false;
       document.getElementById('score').textContent = 0;
       show('Flappy Bird', 'Tap or press Space to flap.');
     }
@@ -120,7 +120,8 @@
       frame += step;
       bird.vy += gravity * step; bird.y += bird.vy * step;
       bird.rot = Math.min(Math.PI/3.5, Math.max(-0.45, bird.vy*0.055));
-      if (frame % 85 === 0) addPipe();
+      pipeTimer += step;
+      if (pipeTimer >= 75) { pipeTimer = 40; addPipe(); }
       pipes.forEach(p => {
         p.x -= 2.7 * step;
         if (!p.passed && p.x+pipeW < bird.x) { p.passed = true; score++; document.getElementById('score').textContent = score; }
