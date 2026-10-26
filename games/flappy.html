@@ -59,18 +59,18 @@
     let W = canvas.width, H = canvas.height;
 
     let bird, pipes, score, frame, started, dead, best;
-    const gravity = 0.36, jump = -6.2, gap = 175, pipeW = 54;
+    const gravity = 0.34, jump = -6.0, gap = 240, pipeW = 52;
     best = +localStorage.getItem('flappy-best') || 0;
 
     function reset() {
       bird = { x: 100, y: H/2, vy: 0, r: 18, rot: 0 };
-      pipes = []; score = 0; frame = 0; pipeTimer = 40; started = false; dead = false;
+      pipes = []; score = 0; frame = 0; pipeTimer = 50; started = false; dead = false;
       document.getElementById('score').textContent = 0;
       show('Flappy Bird', 'Tap or press Space to flap.');
     }
     function show(t,m){ document.getElementById('otitle').textContent=t; document.getElementById('omsg').textContent=m; document.getElementById('overlay').classList.add('show'); }
     function hide(){ document.getElementById('overlay').classList.remove('show'); }
-    function addPipe(){ const top = 90 + Math.random()*(H-gap-200); pipes.push({x:W+20, top, bottom:top+gap, passed:false}); }
+    function addPipe(){ const top = 80 + Math.random()*(H-gap-180); pipes.push({x:W+20, top, bottom:top+gap, passed:false}); }
 
     function draw() {
       const bg = ctx.createLinearGradient(0,0,0,H);
@@ -121,7 +121,7 @@
       bird.vy += gravity * step; bird.y += bird.vy * step;
       bird.rot = Math.min(Math.PI/3.5, Math.max(-0.45, bird.vy*0.055));
       pipeTimer += step;
-      if (pipeTimer >= 75) { pipeTimer = 40; addPipe(); }
+      if (pipeTimer >= 90) { pipeTimer = 0; addPipe(); }
       pipes.forEach(p => {
         p.x -= 2.7 * step;
         if (!p.passed && p.x+pipeW < bird.x) { p.passed = true; score++; document.getElementById('score').textContent = score; }
