@@ -1,0 +1,9 @@
+{
+  "name": "gamelane",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "scan": "node scan-games.js",
+    "build": "node scan-games.js"
+  }
+}

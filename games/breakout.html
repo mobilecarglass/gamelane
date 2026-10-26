@@ -1,0 +1,188 @@
+<!--
+  title: Breakout
+  description: Break all the bricks with your paddle and ball. Don't let the ball fall!
+  tags: arcade, classic
+  thumbnail: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhMWEyZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNjIxM2UiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjUwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gYnJpY2tzIC0tPgogIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0iIzhiNWNmNiIvPgogIDxyZWN0IHg9IjEwOCIgeT0iNDAiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiNhNzhiZmEiLz4KICA8cmVjdCB4PSIxNzYiIHk9IjQwIiB3aWR0aD0iNjAiIGhlaWdodD0iMTgiIHJ4PSIzIiBmaWxsPSIjOGI1Y2Y2Ii8+CiAgPHJlY3QgeD0iMjQ0IiB5PSI0MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0iI2E3OGJmYSIvPgogIDxyZWN0IHg9IjMxMiIgeT0iNDAiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiM4YjVjZjYiLz4KICA8cmVjdCB4PSI0MCIgeT0iNjYiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiMyMmQzZWUiLz4KICA8cmVjdCB4PSIxMDgiIHk9IjY2IiB3aWR0aD0iNjAiIGhlaWdodD0iMTgiIHJ4PSIzIiBmaWxsPSIjNjdlOGY5Ii8+CiAgPHJlY3QgeD0iMTc2IiB5PSI2NiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0iIzIyZDNlZSIvPgogIDxyZWN0IHg9IjI0NCIgeT0iNjYiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiM2N2U4ZjkiLz4KICA8cmVjdCB4PSIzMTIiIHk9IjY2IiB3aWR0aD0iNjAiIGhlaWdodD0iMTgiIHJ4PSIzIiBmaWxsPSIjMjJkM2VlIi8+CiAgPHJlY3QgeD0iNDAiIHk9IjkyIiB3aWR0aD0iNjAiIGhlaWdodD0iMTgiIHJ4PSIzIiBmaWxsPSIjZjQ3MmI2Ii8+CiAgPHJlY3QgeD0iMTA4IiB5PSI5MiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0iI2ZiNzE4NSIvPgogIDxyZWN0IHg9IjE3NiIgeT0iOTIiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiNmNDcyYjYiLz4KICA8cmVjdCB4PSIyNDQiIHk9IjkyIiB3aWR0aD0iNjAiIGhlaWdodD0iMTgiIHJ4PSIzIiBmaWxsPSIjZmI3MTg1Ii8+CiAgPHJlY3QgeD0iMzEyIiB5PSI5MiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0iI2Y0NzJiNiIvPgogIDwhLS0gYmFsbCAtLT4KICA8Y2lyY2xlIGN4PSIyMDAiIGN5PSIxNTAiIHI9IjEwIiBmaWxsPSIjZjBmM2Y2Ii8+CiAgPCEtLSBwYWRkbGUgLS0+CiAgPHJlY3QgeD0iMTUwIiB5PSIyMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTQiIHJ4PSI3IiBmaWxsPSIjOGI1Y2Y2Ii8+CiAgPHRleHQgeD0iMjAwIiB5PSIyMzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNlMmU4ZjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjcwMCI+QnJlYWtvdXQ8L3RleHQ+Cjwvc3ZnPgo=
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breakout — GameLane</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0f;
+      color: #e8e8f0;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .score { color: #8888a0; margin-bottom: 1rem; }
+    canvas {
+      background: #12121a;
+      border-radius: 12px;
+      border: 1px solid #1e1e2e;
+      max-width: 95vw;
+      max-height: 70vh;
+      touch-action: none;
+    }
+    .hint { margin-top: 1rem; font-size: 0.85rem; color: #666; }
+    a.back {
+      position: fixed; top: 1rem; left: 1rem;
+      color: #8888a0; text-decoration: none; font-size: 0.9rem;
+    }
+    a.back:hover { color: #7c5cfc; }
+  </style>
+</head>
+<body>
+  <a class="back" href="../index.html">← GameLane</a>
+  <h1>Breakout</h1>
+  <div class="score">Score: <span id="score">0</span> · Lives: <span id="lives">3</span></div>
+  <canvas id="c" width="480" height="360"></canvas>
+  <p class="hint">Move mouse / touch · or ← → keys</p>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    let paddle = {x: W/2 - 50, y: H - 30, w: 100, h: 12};
+    let ball = {x: W/2, y: H - 50, r: 8, dx: 4, dy: -4};
+    let bricks = [];
+    let score = 0, lives = 3, over = false;
+    const rows = 5, cols = 10;
+    const bw = W / cols, bh = 18;
+
+    function initBricks() {
+      bricks = [];
+      const colors = ['#7c5cfc','#a78bfa','#00d4aa','#f472b6','#fbbf24'];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          bricks.push({x: c*bw, y: 40 + r*(bh+4), w: bw-4, h: bh, color: colors[r], alive: true});
+        }
+      }
+    }
+    initBricks();
+
+    function draw() {
+      ctx.fillStyle = '#12121a';
+      ctx.fillRect(0,0,W,H);
+
+      bricks.forEach(b => {
+        if (!b.alive) return;
+        ctx.fillStyle = b.color;
+        ctx.beginPath();
+        ctx.roundRect(b.x+2, b.y, b.w, b.h, 3);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = '#7c5cfc';
+      ctx.beginPath();
+      ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 6);
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
+      ctx.fill();
+
+      if (over) {
+        ctx.fillStyle = 'rgba(0,0,0,0.65)';
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 26px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText(lives <= 0 ? 'Game Over' : 'You Win!', W/2, H/2 - 10);
+        ctx.font = '15px system-ui';
+        ctx.fillStyle = '#aaa';
+        ctx.fillText('Press R to restart', W/2, H/2 + 25);
+      }
+    }
+
+    function update() {
+      if (over) return;
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      if (ball.x < ball.r || ball.x > W - ball.r) ball.dx *= -1;
+      if (ball.y < ball.r) ball.dy *= -1;
+
+      // paddle
+      if (ball.y + ball.r > paddle.y && ball.y - ball.r < paddle.y + paddle.h &&
+          ball.x > paddle.x && ball.x < paddle.x + paddle.w) {
+        ball.dy = -Math.abs(ball.dy);
+        const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
+        ball.dx = hit * 5;
+      }
+
+      // bricks
+      bricks.forEach(b => {
+        if (!b.alive) return;
+        if (ball.x > b.x && ball.x < b.x + b.w &&
+            ball.y - ball.r < b.y + b.h && ball.y + ball.r > b.y) {
+          b.alive = false;
+          ball.dy *= -1;
+          score += 10;
+          document.getElementById('score').textContent = score;
+        }
+      });
+
+      if (bricks.every(b => !b.alive)) {
+        over = true;
+      }
+
+      if (ball.y > H) {
+        lives--;
+        document.getElementById('lives').textContent = lives;
+        if (lives <= 0) over = true;
+        else {
+          ball.x = W/2; ball.y = H - 50; ball.dx = 4 * (Math.random() > 0.5 ? 1 : -1); ball.dy = -4;
+        }
+      }
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    // controls
+    canvas.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      paddle.x = (e.clientX - rect.left) * scale - paddle.w/2;
+      paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+    });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      paddle.x = (e.touches[0].clientX - rect.left) * scale - paddle.w/2;
+      paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+    }, {passive:false});
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') paddle.x = Math.max(0, paddle.x - 20);
+      if (e.key === 'ArrowRight') paddle.x = Math.min(W - paddle.w, paddle.x + 20);
+      if (e.key === 'r' || e.key === 'R') {
+        score = 0; lives = 3; over = false;
+        document.getElementById('score').textContent = 0;
+        document.getElementById('lives').textContent = 3;
+        ball = {x: W/2, y: H-50, r:8, dx:4, dy:-4};
+        initBricks();
+      }
+    });
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

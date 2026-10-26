@@ -1,0 +1,193 @@
+<!--
+  title: Flappy Bird
+  description: Tap to flap through the pipes. Simple controls, hard to master.
+  tags: arcade, endless
+  thumbnail: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhMWEyZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZjM0NjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjUwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gcGlwZXMgLS0+CiAgPHJlY3QgeD0iMjgwIiB5PSIwIiB3aWR0aD0iNTAiIGhlaWdodD0iODAiIHJ4PSI0IiBmaWxsPSIjMjJkM2VlIi8+CiAgPHJlY3QgeD0iMjgwIiB5PSIxNjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI5MCIgcng9IjQiIGZpbGw9IiMyMmQzZWUiLz4KICA8cmVjdCB4PSIxMDAiIHk9IjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgcng9IjQiIGZpbGw9IiMyMmQzZWUiIG9wYWNpdHk9IjAuNyIvPgogIDxyZWN0IHg9IjEwMCIgeT0iMTMwIiB3aWR0aD0iNTAiIGhlaWdodD0iMTIwIiByeD0iNCIgZmlsbD0iIzIyZDNlZSIgb3BhY2l0eT0iMC43Ii8+CiAgPCEtLSBiaXJkIC0tPgogIDxjaXJjbGUgY3g9IjE4MCIgY3k9IjExMCIgcj0iMTgiIGZpbGw9IiNmYmJmMjQiLz4KICA8Y2lyY2xlIGN4PSIxODgiIGN5PSIxMDQiIHI9IjQiIGZpbGw9IiMwZjExMTciLz4KICA8ZWxsaXBzZSBjeD0iMTcwIiBjeT0iMTE4IiByeD0iOCIgcnk9IjUiIGZpbGw9IiNmNTllMGIiLz4KICA8dGV4dCB4PSIyMDAiIHk9IjIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2UyZThmMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5GbGFwcHkgQmlyZDwvdGV4dD4KPC9zdmc+Cg==
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flappy Bird — GameLane</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0f;
+      color: #e8e8f0;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+      touch-action: none;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .score { color: #8888a0; margin-bottom: 1rem; font-size: 1.1rem; }
+    canvas {
+      background: linear-gradient(#1a1a2e 0%, #0f3460 100%);
+      border-radius: 12px;
+      border: 1px solid #1e1e2e;
+      max-width: 95vw;
+      max-height: 70vh;
+      cursor: pointer;
+    }
+    .hint { margin-top: 1rem; font-size: 0.85rem; color: #666; }
+    a.back {
+      position: fixed; top: 1rem; left: 1rem;
+      color: #8888a0; text-decoration: none; font-size: 0.9rem;
+    }
+    a.back:hover { color: #7c5cfc; }
+  </style>
+</head>
+<body>
+  <a class="back" href="../index.html">← GameLane</a>
+  <h1>Flappy Bird</h1>
+  <div class="score">Score: <span id="score">0</span></div>
+  <canvas id="c" width="360" height="520"></canvas>
+  <p class="hint">Click / Tap / Space to flap</p>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    let bird = {x: 80, y: H/2, vy: 0, r: 14};
+    let pipes = [];
+    let score = 0;
+    let frame = 0;
+    let started = false;
+    let dead = false;
+    const gravity = 0.45;
+    const jump = -7.5;
+    const gap = 140;
+    const pipeW = 52;
+
+    function reset() {
+      bird = {x: 80, y: H/2, vy: 0, r: 14};
+      pipes = [];
+      score = 0;
+      frame = 0;
+      started = false;
+      dead = false;
+      document.getElementById('score').textContent = 0;
+    }
+
+    function addPipe() {
+      const top = 60 + Math.random() * (H - gap - 140);
+      pipes.push({x: W, top, bottom: top + gap, passed: false});
+    }
+
+    function draw() {
+      // sky already on canvas bg via CSS, but we clear
+      ctx.clearRect(0,0,W,H);
+
+      // pipes
+      ctx.fillStyle = '#00d4aa';
+      pipes.forEach(p => {
+        ctx.beginPath();
+        ctx.roundRect(p.x, 0, pipeW, p.top, [0,0,8,8]);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.roundRect(p.x, p.bottom, pipeW, H - p.bottom, [8,8,0,0]);
+        ctx.fill();
+      });
+
+      // bird
+      ctx.fillStyle = dead ? '#f472b6' : '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI*2);
+      ctx.fill();
+      // eye
+      ctx.fillStyle = '#111';
+      ctx.beginPath();
+      ctx.arc(bird.x + 5, bird.y - 4, 3, 0, Math.PI*2);
+      ctx.fill();
+
+      // ground line
+      ctx.strokeStyle = '#1e1e2e';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, H-2);
+      ctx.lineTo(W, H-2);
+      ctx.stroke();
+
+      if (!started && !dead) {
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 22px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('Tap to start', W/2, H/2);
+      }
+
+      if (dead) {
+        ctx.fillStyle = 'rgba(0,0,0,0.55)';
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 26px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over', W/2, H/2 - 15);
+        ctx.font = '15px system-ui';
+        ctx.fillStyle = '#aaa';
+        ctx.fillText('Tap to retry', W/2, H/2 + 20);
+      }
+    }
+
+    function update() {
+      if (!started || dead) return;
+      frame++;
+      bird.vy += gravity;
+      bird.y += bird.vy;
+
+      if (frame % 90 === 0) addPipe();
+
+      pipes.forEach(p => {
+        p.x -= 2.8;
+        if (!p.passed && p.x + pipeW < bird.x) {
+          p.passed = true;
+          score++;
+          document.getElementById('score').textContent = score;
+        }
+      });
+      pipes = pipes.filter(p => p.x > -pipeW);
+
+      // collisions
+      if (bird.y + bird.r > H - 4 || bird.y - bird.r < 0) {
+        dead = true;
+        return;
+      }
+      for (const p of pipes) {
+        if (bird.x + bird.r > p.x && bird.x - bird.r < p.x + pipeW) {
+          if (bird.y - bird.r < p.top || bird.y + bird.r > p.bottom) {
+            dead = true;
+            return;
+          }
+        }
+      }
+    }
+
+    function flap() {
+      if (dead) { reset(); return; }
+      if (!started) started = true;
+      bird.vy = jump;
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    canvas.addEventListener('click', flap);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); flap(); }, {passive:false});
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space' || e.key === ' ') { e.preventDefault(); flap(); }
+    });
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
