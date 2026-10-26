@@ -59,7 +59,7 @@
     let W = canvas.width, H = canvas.height;
 
     let bird, pipes, score, frame, started, dead, best;
-    const gravity = 0.24, jump = -5.0, gap = 210, pipeW = 56;
+    const gravity = 0.30, jump = -5.6, gap = 190, pipeW = 56;
     best = +localStorage.getItem('flappy-best') || 0;
 
     function reset() {
@@ -120,9 +120,9 @@
       frame += step;
       bird.vy += gravity * step; bird.y += bird.vy * step;
       bird.rot = Math.min(Math.PI/3.5, Math.max(-0.45, bird.vy*0.055));
-      if (frame % 140 === 0) addPipe();
+      if (frame % 105 === 0) addPipe();
       pipes.forEach(p => {
-        p.x -= 1.55 * step;
+        p.x -= 2.15 * step;
         if (!p.passed && p.x+pipeW < bird.x) { p.passed = true; score++; document.getElementById('score').textContent = score; }
       });
       pipes = pipes.filter(p => p.x > -pipeW-20);

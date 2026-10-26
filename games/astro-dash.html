@@ -250,7 +250,7 @@
         });
       }
       score = 0;
-      speed = 3.4;
+      speed = 4.6;
       frame = 0;
       started = false;
       dead = false;
@@ -521,7 +521,7 @@
       frame += step;
       invuln = Math.max(0, invuln - 1);
 
-      speed = Math.min(7.5, 3.4 + frame * 0.0010);
+      speed = Math.min(9.0, 4.6 + frame * 0.0015);
 
       player.x += (player.targetX - player.x) * 0.2 * step;
 
@@ -535,9 +535,9 @@
         }
       }
 
-      const spawnRate = Math.max(48, 80 - Math.floor(speed * 2.2));
+      const spawnRate = Math.max(40, 65 - Math.floor(speed * 2.5));
       if (frame % spawnRate === 0) spawnObstacle();
-      if (frame % 60 === 0) spawnOrb();
+      if (frame % 48 === 0) spawnOrb();
 
       obstacles.forEach(o => o.y += speed * step);
       orbs.forEach(o => o.y += speed * step);
