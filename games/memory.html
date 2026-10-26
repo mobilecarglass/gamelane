@@ -2,7 +2,7 @@
   title: Memory Match
   description: Flip cards and find matching pairs. How fast can you clear the board?
   tags: puzzle, casual
-  thumbnail: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhMWEyZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNjIxM2UiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjUwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gY2FyZHMgLS0+CiAgPHJlY3QgeD0iNzAiIHk9IjUwIiB3aWR0aD0iNzAiIGhlaWdodD0iOTAiIHJ4PSIxMCIgZmlsbD0iIzFjMjEyOCIgc3Ryb2tlPSIjOGI1Y2Y2IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSIxMDUiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIzMiI+8J+mijwvdGV4dD4KICA8cmVjdCB4PSIxNTUiIHk9IjUwIiB3aWR0aD0iNzAiIGhlaWdodD0iOTAiIHJ4PSIxMCIgZmlsbD0iIzFjMjEyOCIgc3Ryb2tlPSIjMzAzNjNkIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSIxOTAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyOCIgZmlsbD0iIzQ4NGY1OCI+PzwvdGV4dD4KICA8cmVjdCB4PSIyNDAiIHk9IjUwIiB3aWR0aD0iNzAiIGhlaWdodD0iOTAiIHJ4PSIxMCIgZmlsbD0iIzFjMjEyOCIgc3Ryb2tlPSIjMjJkM2VlIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSIyNzUiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIzMiI+8J+QuDwvdGV4dD4KICA8cmVjdCB4PSIxMTAiIHk9IjE1MCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjUwIiByeD0iOCIgZmlsbD0iIzFjMjEyOCIgc3Ryb2tlPSIjMzAzNjNkIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSIxNDUiIHk9IjE4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMiIgZmlsbD0iIzQ4NGY1OCI+PzwvdGV4dD4KICA8cmVjdCB4PSIxOTUiIHk9IjE1MCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjUwIiByeD0iOCIgZmlsbD0iIzFjMjEyOCIgc3Ryb2tlPSIjMzAzNjNkIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSIyMzAiIHk9IjE4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMiIgZmlsbD0iIzQ4NGY1OCI+PzwvdGV4dD4KICA8dGV4dCB4PSIyMDAiIHk9IjIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2UyZThmMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5NZW1vcnkgTWF0Y2g8L3RleHQ+Cjwvc3ZnPgo=
+  thumbnail: games/thumbs/memory.svg
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -12,93 +12,126 @@
   <title>Memory Match — GameLane</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --panel: #161b22;
+      --card: #1c2128;
+      --border: #30363d;
+      --text: #f0f3f6;
+      --muted: #8b949e;
+      --accent: #8b5cf6;
+      --success: #22d3ee;
+    }
     body {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #0a0a0f;
-      color: #e8e8f0;
-      font-family: system-ui, sans-serif;
-      padding: 1rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 1.25rem;
     }
-    h1 { font-size: 1.5rem; margin-bottom: 0.4rem; }
-    .info { color: #8888a0; margin-bottom: 1.25rem; font-size: 0.95rem; }
+    a.back {
+      position: fixed; top: 1.1rem; left: 1.1rem;
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      z-index: 10; transition: color 0.2s;
+    }
+    a.back:hover { color: var(--accent); }
+    h1 {
+      font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .hud {
+      color: var(--muted); font-size: 0.95rem; margin-bottom: 1.25rem;
+    }
+    .hud strong { color: var(--text); }
     .board {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      max-width: 420px;
+      max-width: 400px;
       width: 100%;
     }
     .card {
       aspect-ratio: 1;
-      background: #1a1a26;
-      border: 1px solid #2a2a3d;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      perspective: 800px;
       cursor: pointer;
-      transition: transform 0.25s, background 0.25s, border-color 0.25s;
-      user-select: none;
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+    .card-inner {
       position: relative;
+      width: 100%; height: 100%;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
     }
-    .card.flipped, .card.matched {
-      background: #12121a;
-      border-color: #7c5cfc;
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
     }
-    .card.matched {
-      border-color: #00d4aa;
-      opacity: 0.7;
-      cursor: default;
+    .face {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      font-size: clamp(1.4rem, 5.5vw, 2rem);
+      border: 1px solid var(--border);
     }
-    .card .front { display: none; }
-    .card.flipped .front, .card.matched .front { display: block; }
-    .card .back { font-size: 1.2rem; opacity: 0.4; }
-    .card.flipped .back, .card.matched .back { display: none; }
-    .card:active:not(.matched) { transform: scale(0.95); }
+    .face.back {
+      background: linear-gradient(145deg, #1c2128, #161b22);
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .face.front {
+      background: var(--card);
+      transform: rotateY(180deg);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(139,92,246,0.25);
+    }
+    .card.matched .face.front {
+      border-color: var(--success);
+      box-shadow: 0 0 0 1px rgba(34,211,238,0.3);
+      opacity: 0.85;
+    }
+    .card:active:not(.matched) .card-inner {
+      transform: scale(0.96) rotateY(var(--ry, 0deg));
+    }
+    .card.flipped:active .card-inner { --ry: 180deg; }
     .win {
       margin-top: 1.5rem;
-      font-size: 1.1rem;
-      color: #00d4aa;
+      text-align: center;
       display: none;
     }
-    button {
-      margin-top: 1rem;
+    .win.show { display: block; }
+    .win h2 {
+      font-size: 1.25rem; color: var(--success); margin-bottom: 0.75rem;
+    }
+    .btn {
       padding: 0.55rem 1.4rem;
-      background: #7c5cfc;
-      color: white;
-      border: none;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: none;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white; border: none; border-radius: 999px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 18px rgba(139,92,246,0.35);
     }
-    button:hover { background: #6d4eef; }
-    a.back {
-      position: fixed; top: 1rem; left: 1rem;
-      color: #8888a0; text-decoration: none; font-size: 0.9rem;
-    }
-    a.back:hover { color: #7c5cfc; }
   </style>
 </head>
 <body>
   <a class="back" href="../index.html">← GameLane</a>
   <h1>Memory Match</h1>
-  <div class="info">Moves: <span id="moves">0</span></div>
+  <div class="hud">Moves <strong id="moves">0</strong></div>
   <div class="board" id="board"></div>
-  <div class="win" id="win">You won!</div>
-  <button id="restart">Play again</button>
+  <div class="win" id="win">
+    <h2>Nice work!</h2>
+    <button class="btn" id="restart">Play again</button>
+  </div>
 
   <script>
     const emojis = ['🦊','🐸','🦉','🐙','🦋','🐬','🦄','🐨'];
-    let cards = [...emojis, ...emojis];
-    let flipped = [];
-    let matched = 0;
-    let moves = 0;
-    let lock = false;
+    let cards, flipped, matched, moves, lock;
 
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -115,15 +148,16 @@
       moves = 0;
       lock = false;
       document.getElementById('moves').textContent = 0;
-      document.getElementById('win').style.display = 'none';
-      document.getElementById('restart').style.display = 'none';
+      document.getElementById('win').classList.remove('show');
 
       const board = document.getElementById('board');
       board.innerHTML = cards.map((e, i) => `
-        <div class="card" data-idx="${i}">
-          <span class="front">${e}</span>
-          <span class="back">?</span>
-        </div>
+        <button class="card" data-idx="${i}" aria-label="Card">
+          <div class="card-inner">
+            <div class="face back">?</div>
+            <div class="face front">${e}</div>
+          </div>
+        </button>
       `).join('');
 
       board.querySelectorAll('.card').forEach(card => {
@@ -145,22 +179,23 @@
         const eb = b.querySelector('.front').textContent;
 
         if (ea === eb) {
-          a.classList.add('matched');
-          b.classList.add('matched');
-          matched += 2;
-          flipped = [];
-          lock = false;
-          if (matched === cards.length) {
-            document.getElementById('win').style.display = 'block';
-            document.getElementById('restart').style.display = 'inline-block';
-          }
+          setTimeout(() => {
+            a.classList.add('matched');
+            b.classList.add('matched');
+            matched += 2;
+            flipped = [];
+            lock = false;
+            if (matched === cards.length) {
+              document.getElementById('win').classList.add('show');
+            }
+          }, 280);
         } else {
           setTimeout(() => {
             a.classList.remove('flipped');
             b.classList.remove('flipped');
             flipped = [];
             lock = false;
-          }, 700);
+          }, 650);
         }
       }
     }

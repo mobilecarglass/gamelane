@@ -22,26 +22,24 @@ Just push a new game file. The Action does the rest.
 ## Adding a new game
 
 1. Create `games/my-game.html`
-2. Put this meta block at the very top of the file:
+2. Put this meta block at the very top:
 
 ```html
 <!--
   title: My Cool Game
   description: Short description for the card
   tags: arcade, puzzle
-  thumbnail: data:image/svg+xml;base64,PHN2Zy...   ← optional Base64 data URI
+  thumbnail: games/thumbs/my-game.svg
 -->
 ```
 
-3. Commit & push
+3. (Optional) Add a thumbnail in `games/thumbs/`
+4. Commit & push
 
 The GitHub Action will:
 - detect the new file
-- regenerate `games.json` (including any embedded thumbnail)
+- regenerate `games.json`
 - commit it (or deploy)
-
-**Tip:** Thumbnails are stored as Base64 data URIs *inside* each game HTML file.  
-No separate `thumbs/` folder is needed. Adding or deleting a game only touches that one HTML file.
 
 ## Local development
 
@@ -62,5 +60,6 @@ npx serve .
 │   ├── scan-games.yml
 │   └── scan-and-deploy.yml
 └── games/
-    └── *.html          ← each game is self-contained (thumbnail inside meta comment)
+    ├── *.html
+    └── thumbs/
 ```
