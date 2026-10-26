@@ -59,7 +59,7 @@
     canvas {
       display: block;
       max-width: 92vw;
-      max-height: 68vh;
+      max-height: 78vh;
       image-rendering: pixelated;
     }
     .overlay {
@@ -98,7 +98,7 @@
     <div>Best <strong id="best">0</strong></div>
   </div>
   <div class="board-wrap">
-    <canvas id="c" width="400" height="400"></canvas>
+    <canvas id="c" width="480" height="480"></canvas>
     <div class="overlay" id="overlay">
       <h2 id="overlay-title">Snake</h2>
       <p id="overlay-msg">Press any key or tap to start</p>
@@ -110,12 +110,12 @@
   <script>
     const canvas = document.getElementById('c');
     const ctx = canvas.getContext('2d');
-    const size = 20;
+    const size = 24;
     const cols = canvas.width / size;
     const rows = canvas.height / size;
 
     let snake, dir, nextDir, food, score, best, paused, dead, started, last, particles;
-    const speed = 95;
+    const speed = 120;
     best = +localStorage.getItem('snake-best') || 0;
     document.getElementById('best').textContent = best;
 

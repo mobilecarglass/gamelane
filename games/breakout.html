@@ -54,7 +54,7 @@
     canvas {
       display: block;
       max-width: 94vw;
-      max-height: 70vh;
+      max-height: 78vh;
       touch-action: none;
     }
     .overlay {
@@ -86,7 +86,7 @@
     <div>Lives <strong id="lives">3</strong></div>
   </div>
   <div class="board-wrap">
-    <canvas id="c" width="480" height="360"></canvas>
+    <canvas id="c" width="560" height="420"></canvas>
     <div class="overlay show" id="overlay">
       <h2 id="otitle">Breakout</h2>
       <p id="omsg">Move to start</p>
@@ -102,7 +102,7 @@
 
     let paddle, ball, bricks, score, lives, over, started, particles;
     const rows = 5, cols = 10;
-    const bw = W / cols, bh = 16;
+    const bw = W / cols, bh = 20;
     const colors = ['#8b5cf6','#a78bfa','#22d3ee','#f472b6','#fbbf24'];
 
     function initBricks() {
@@ -118,8 +118,8 @@
     }
 
     function reset() {
-      paddle = {x: W/2 - 50, y: H - 28, w: 100, h: 12};
-      ball = {x: W/2, y: H - 50, r: 7, dx: 4.2, dy: -4.2};
+      paddle = {x: W/2 - 60, y: H - 32, w: 120, h: 14};
+      ball = {x: W/2, y: H - 55, r: 9, dx: 3.8, dy: -3.8};
       score = 0; lives = 3; over = false; started = false;
       particles = [];
       initBricks();
@@ -228,7 +228,7 @@
           over = true;
           show('Game Over', `Score: ${score}`);
         } else {
-          ball = {x: W/2, y: H-50, r:7, dx: 4.2*(Math.random()>0.5?1:-1), dy:-4.2};
+          ball = {x: W/2, y: H-55, r:9, dx: 3.8*(Math.random()>0.5?1:-1), dy:-3.8};
         }
       }
 
