@@ -1,5 +1,17 @@
 [
   {
+    "id": "astro-dash",
+    "title": "Astro Dash",
+    "description": "Race through a space station as an astronaut. Switch lanes, jump obstacles, collect energy orbs.",
+    "url": "games/astro-dash.html",
+    "tags": [
+      "arcade",
+      "endless",
+      "action"
+    ],
+    "thumbnail": "games/thumbs/astro-dash.svg"
+  },
+  {
     "id": "breakout",
     "title": "Breakout",
     "description": "Break all the bricks with your paddle and ball. Don't let the ball fall!",

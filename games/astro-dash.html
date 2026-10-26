@@ -1,0 +1,500 @@
+<!--
+  title: Astro Dash
+  description: Race through a space station as an astronaut. Switch lanes, jump obstacles, collect energy orbs.
+  tags: arcade, endless, action
+  thumbnail: games/thumbs/astro-dash.svg
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Astro Dash — GameLane</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0b0d12;
+      color: #f0f3f6;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+    }
+    a.back {
+      position: fixed; top: 1rem; left: 1rem;
+      color: #8b949e; text-decoration: none; font-size: 0.9rem; z-index: 10;
+    }
+    a.back:hover { color: #8b5cf6; }
+    .hud {
+      display: flex; gap: 2.2rem; margin-bottom: 0.9rem;
+      font-size: 0.9rem; letter-spacing: 0.03em;
+    }
+    .hud span { color: #8b949e; font-size: 0.78rem; display: block; }
+    .hud strong { font-weight: 700; font-size: 1.4rem; }
+    .board-wrap {
+      position: relative;
+      border-radius: 20px;
+      border: 1px solid #2a2f3a;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.55);
+    }
+    canvas {
+      display: block;
+      width: min(94vw, 420px);
+      height: auto;
+      cursor: pointer;
+    }
+    .overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(11,13,18,0.82);
+      backdrop-filter: blur(10px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+      text-align: center; padding: 1.5rem;
+    }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .overlay h2 { font-size: 1.7rem; font-weight: 700; margin-bottom: 0.35rem; letter-spacing: -0.02em; }
+    .overlay p { color: #8b949e; margin-bottom: 1.3rem; font-size: 0.95rem; line-height: 1.45; }
+    .btn {
+      padding: 0.7rem 1.9rem;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white; border: none; border-radius: 999px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(139,92,246,0.45);
+    }
+    .hint { margin-top: 1rem; font-size: 0.78rem; color: #8b949e; opacity: 0.8; text-align: center; max-width: 320px; }
+  </style>
+</head>
+<body>
+  <a class="back" href="../index.html">← GameLane</a>
+  <div class="hud">
+    <div><span>SCORE</span><strong id="score">0</strong></div>
+    <div><span>BEST</span><strong id="best">0</strong></div>
+  </div>
+  <div class="board-wrap">
+    <canvas id="c" width="420" height="700"></canvas>
+    <div class="overlay show" id="overlay">
+      <h2 id="otitle">Astro Dash</h2>
+      <p id="omsg">Dodge obstacles in a space station.<br>Swipe or use arrow keys.</p>
+      <button class="btn" id="btn">Play</button>
+    </div>
+  </div>
+  <p class="hint">← → or swipe to change lanes · ↑ / swipe up to jump</p>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    // Lanes
+    const LANES = 3;
+    const laneX = (i) => W * (0.22 + i * 0.28);
+
+    let player, obstacles, orbs, particles, score, best, speed, frame, started, dead, invuln;
+    best = +localStorage.getItem('astro-best') || 0;
+    document.getElementById('best').textContent = best;
+
+    function reset() {
+      player = {
+        lane: 1,
+        x: laneX(1),
+        y: H * 0.72,
+        targetX: laneX(1),
+        vy: 0,
+        grounded: true,
+        jumpPower: -13.5,
+        gravity: 0.55,
+        r: 22,
+        anim: 0
+      };
+      obstacles = [];
+      orbs = [];
+      particles = [];
+      score = 0;
+      speed = 4.2;
+      frame = 0;
+      started = false;
+      dead = false;
+      invuln = 0;
+      document.getElementById('score').textContent = 0;
+      show('Astro Dash', 'Dodge obstacles in a space station.\nSwipe or use arrow keys.');
+    }
+
+    function show(t, m) {
+      document.getElementById('otitle').textContent = t;
+      document.getElementById('omsg').innerHTML = m.replace('\n', '<br>');
+      document.getElementById('overlay').classList.add('show');
+    }
+    function hide() { document.getElementById('overlay').classList.remove('show'); }
+
+    function spawnObstacle() {
+      const lane = Math.floor(Math.random() * LANES);
+      const type = Math.random() < 0.55 ? 'box' : 'beam';
+      obstacles.push({
+        lane, type,
+        y: -60,
+        h: type === 'box' ? 48 : 28,
+        w: type === 'box' ? 54 : 70,
+        passed: false
+      });
+    }
+
+    function spawnOrb() {
+      const lane = Math.floor(Math.random() * LANES);
+      orbs.push({ lane, y: -30, r: 11, collected: false });
+    }
+
+    function spawnParticles(x, y, color, n = 10) {
+      for (let i = 0; i < n; i++) {
+        particles.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 7,
+          vy: (Math.random() - 0.5) * 7 - 2,
+          life: 1,
+          r: 2 + Math.random() * 3,
+          color
+        });
+      }
+    }
+
+    function drawBackground() {
+      // deep space gradient
+      const g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, '#0f172a');
+      g.addColorStop(0.5, '#1e1b4b');
+      g.addColorStop(1, '#0c4a6e');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+
+      // stars
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      for (let i = 0; i < 30; i++) {
+        const sx = (i * 73 + frame * 0.08) % W;
+        const sy = (i * 97 + frame * 0.4) % H;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // lane lines (perspective feel)
+      ctx.strokeStyle = 'rgba(139,92,246,0.12)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < LANES; i++) {
+        const x = laneX(i);
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+      }
+
+      // floor glow strip
+      const fg = ctx.createLinearGradient(0, H * 0.85, 0, H);
+      fg.addColorStop(0, 'transparent');
+      fg.addColorStop(1, 'rgba(34,211,238,0.06)');
+      ctx.fillStyle = fg;
+      ctx.fillRect(0, H * 0.85, W, H * 0.15);
+    }
+
+    function drawPlayer() {
+      const p = player;
+      p.anim += 0.18;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // landing shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.25)';
+      ctx.beginPath();
+      ctx.ellipse(0, 28, 18, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // jetpack glow when jumping
+      if (!p.grounded) {
+        const jg = ctx.createRadialGradient(0, 18, 2, 0, 26, 22);
+        jg.addColorStop(0, 'rgba(34,211,238,0.5)');
+        jg.addColorStop(1, 'transparent');
+        ctx.fillStyle = jg;
+        ctx.beginPath();
+        ctx.arc(0, 22, 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // body (astronaut suit)
+      ctx.fillStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.roundRect(-16, -20, 32, 36, 10);
+      ctx.fill();
+
+      // visor
+      const vg = ctx.createLinearGradient(-12, -16, 12, -4);
+      vg.addColorStop(0, '#22d3ee');
+      vg.addColorStop(1, '#8b5cf6');
+      ctx.fillStyle = vg;
+      ctx.beginPath();
+      ctx.roundRect(-12, -16, 24, 14, 6);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.fillRect(-9, -14, 10, 4);
+
+      // backpack
+      ctx.fillStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.roundRect(-20, -8, 8, 22, 3);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(12, -8, 8, 22, 3);
+      ctx.fill();
+
+      // legs bob
+      const legOff = p.grounded ? Math.sin(p.anim) * 3 : 0;
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath();
+      ctx.roundRect(-12, 14, 9, 12 + legOff, 3);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(3, 14, 9, 12 - legOff, 3);
+      ctx.fill();
+
+      // boots
+      ctx.fillStyle = '#8b5cf6';
+      ctx.beginPath();
+      ctx.roundRect(-13, 24 + legOff, 11, 7, 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(2, 24 - legOff, 11, 7, 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawObstacles() {
+      obstacles.forEach(o => {
+        const x = laneX(o.lane);
+        if (o.type === 'box') {
+          // cargo crate
+          ctx.fillStyle = '#334155';
+          ctx.beginPath();
+          ctx.roundRect(x - o.w/2, o.y, o.w, o.h, 6);
+          ctx.fill();
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          // stripes
+          ctx.fillStyle = '#f59e0b';
+          ctx.fillRect(x - o.w/2 + 6, o.y + 10, o.w - 12, 6);
+          ctx.fillRect(x - o.w/2 + 6, o.y + 28, o.w - 12, 6);
+        } else {
+          // energy beam
+          const bg = ctx.createLinearGradient(x - o.w/2, 0, x + o.w/2, 0);
+          bg.addColorStop(0, 'transparent');
+          bg.addColorStop(0.2, 'rgba(244,63,94,0.7)');
+          bg.addColorStop(0.5, '#fb7185');
+          bg.addColorStop(0.8, 'rgba(244,63,94,0.7)');
+          bg.addColorStop(1, 'transparent');
+          ctx.fillStyle = bg;
+          ctx.fillRect(x - o.w/2, o.y, o.w, o.h);
+          ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          ctx.fillRect(x - o.w/2, o.y + 8, o.w, 4);
+        }
+      });
+    }
+
+    function drawOrbs() {
+      orbs.forEach(o => {
+        if (o.collected) return;
+        const x = laneX(o.lane);
+        const glow = ctx.createRadialGradient(x, o.y, 2, x, o.y, 20);
+        glow.addColorStop(0, 'rgba(34,211,238,0.7)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(x, o.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.arc(x, o.y, o.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#a5f3fc';
+        ctx.beginPath();
+        ctx.arc(x - 3, o.y - 3, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function drawParticles() {
+      particles.forEach(p => {
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+    }
+
+    function update() {
+      if (!started || dead) return;
+      frame++;
+      invuln = Math.max(0, invuln - 1);
+
+      // speed ramp (gentle)
+      speed = Math.min(9.5, 4.2 + frame * 0.0018);
+
+      // player horizontal smooth
+      player.x += (player.targetX - player.x) * 0.22;
+
+      // jump physics
+      if (!player.grounded) {
+        player.vy += player.gravity;
+        player.y += player.vy;
+        if (player.y >= H * 0.72) {
+          player.y = H * 0.72;
+          player.vy = 0;
+          player.grounded = true;
+        }
+      }
+
+      // spawn
+      if (frame % Math.max(42, 70 - Math.floor(speed * 3)) === 0) spawnObstacle();
+      if (frame % 55 === 0) spawnOrb();
+
+      // move world
+      obstacles.forEach(o => o.y += speed);
+      orbs.forEach(o => o.y += speed);
+
+      // score for distance
+      if (frame % 6 === 0) {
+        score += 1;
+        document.getElementById('score').textContent = score;
+      }
+
+      // collect orbs
+      orbs.forEach(o => {
+        if (o.collected) return;
+        const x = laneX(o.lane);
+        if (o.lane === player.lane && Math.abs(o.y - player.y) < 36) {
+          o.collected = true;
+          score += 15;
+          document.getElementById('score').textContent = score;
+          spawnParticles(x, o.y, '#22d3ee', 12);
+        }
+      });
+
+      // collisions
+      if (invuln <= 0) {
+        for (const o of obstacles) {
+          if (o.lane !== player.lane) continue;
+          const px = player.x, py = player.y;
+          const ox = laneX(o.lane);
+          const hitX = Math.abs(px - ox) < (o.w / 2 + player.r * 0.5);
+          const hitY = py + player.r > o.y && py - player.r < o.y + o.h;
+          // jump clears boxes if high enough
+          if (o.type === 'box' && player.y < H * 0.72 - 35) continue;
+          if (hitX && hitY) {
+            die();
+            return;
+          }
+        }
+      }
+
+      // cleanup
+      obstacles = obstacles.filter(o => o.y < H + 80);
+      orbs = orbs.filter(o => o.y < H + 40 && !o.collected);
+      particles = particles.filter(p => {
+        p.x += p.vx; p.y += p.vy; p.life -= 0.03; p.r *= 0.97;
+        return p.life > 0;
+      });
+    }
+
+    function die() {
+      dead = true;
+      spawnParticles(player.x, player.y, '#f472b6', 16);
+      if (score > best) {
+        best = score;
+        localStorage.setItem('astro-best', best);
+        document.getElementById('best').textContent = best;
+      }
+      show('Crash!', `Score: ${score}  ·  Best: ${best}`);
+    }
+
+    function jump() {
+      if (!started || dead) return;
+      if (player.grounded) {
+        player.grounded = false;
+        player.vy = player.jumpPower;
+      }
+    }
+
+    function changeLane(dir) {
+      if (!started || dead) return;
+      player.lane = Math.max(0, Math.min(LANES - 1, player.lane + dir));
+      player.targetX = laneX(player.lane);
+    }
+
+    function start() {
+      if (dead) reset();
+      started = true;
+      dead = false;
+      hide();
+    }
+
+    function draw() {
+      drawBackground();
+      drawObstacles();
+      drawOrbs();
+      drawPlayer();
+      drawParticles();
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    // Controls
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') { changeLane(-1); if (!started) start(); }
+      if (e.key === 'ArrowRight' || e.key === 'd') { changeLane(1); if (!started) start(); }
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') { e.preventDefault(); jump(); if (!started) start(); }
+      if (!started || dead) { if (e.key === 'Enter') start(); }
+    });
+
+    // Touch
+    let tx, ty;
+    canvas.addEventListener('touchstart', e => {
+      tx = e.touches[0].clientX;
+      ty = e.touches[0].clientY;
+      if (!started || dead) start();
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
+        jump();
+        return;
+      }
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 25) changeLane(1);
+        else if (dx < -25) changeLane(-1);
+      } else {
+        if (dy < -25) jump();
+      }
+    }, { passive: true });
+
+    document.getElementById('btn').addEventListener('click', start);
+    canvas.addEventListener('click', () => { if (!started || dead) start(); });
+
+    reset();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
