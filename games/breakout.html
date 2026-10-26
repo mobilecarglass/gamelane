@@ -75,7 +75,7 @@
 
     function reset() {
       paddle = { x: W/2-75, y: H-40, w: 150, h: 16 };
-      ball = { x: W/2, y: H-70, r: 12, dx: 3.6, dy: -3.6 };
+      ball = { x: W/2, y: H-70, r: 12, dx: 2.8, dy: -2.8 };
       score = 0; lives = 5; over = false; started = false; particles = [];
       initBricks();
       document.getElementById('score').textContent = 0;
@@ -107,14 +107,14 @@
       particles.forEach(p => { ctx.globalAlpha=p.life; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; });
     }
 
-    function update() {
+    function update(step = 1) {
       if (!started || over) return;
-      ball.x += ball.dx; ball.y += ball.dy;
+      ball.x += ball.dx * step; ball.y += ball.dy * step;
       if (ball.x < ball.r || ball.x > W-ball.r) ball.dx *= -1;
       if (ball.y < ball.r) ball.dy *= -1;
       if (ball.y+ball.r > paddle.y && ball.y-ball.r < paddle.y+paddle.h && ball.x > paddle.x && ball.x < paddle.x+paddle.w) {
         ball.dy = -Math.abs(ball.dy);
-        ball.dx = ((ball.x - (paddle.x+paddle.w/2)) / (paddle.w/2)) * 5.2;
+        ball.dx = ((ball.x - (paddle.x+paddle.w/2)) / (paddle.w/2)) * 4.0;
       }
       bricks.forEach(b => {
         if (!b.alive) return;
@@ -128,12 +128,20 @@
       if (ball.y > H+20) {
         lives--; document.getElementById('lives').textContent = lives;
         if (lives <= 0) { over = true; show('Game Over', `Score: ${score}`); }
-        else ball = { x:W/2, y:H-70, r:12, dx:3.6*(Math.random()>0.5?1:-1), dy:-3.6 };
+        else ball = { x:W/2, y:H-70, r:12, dx:2.8*(Math.random()>0.5?1:-1), dy:-2.8 };
       }
       particles = particles.filter(p => { p.x+=p.vx; p.y+=p.vy; p.life-=0.04; p.r*=0.96; return p.life>0; });
     }
 
-    function loop(){ update(); draw(); requestAnimationFrame(loop); }
+    let lastTime = performance.now();
+    function loop(now) {
+      const dt = Math.min(32, now - lastTime);
+      lastTime = now;
+      const step = dt / 16.67;
+      update(step);
+      draw();
+      requestAnimationFrame(loop);
+    }
     function start(){ if(over) reset(); started=true; hide(); }
 
     canvas.addEventListener('mousemove', e => {

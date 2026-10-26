@@ -250,7 +250,7 @@
         });
       }
       score = 0;
-      speed = 4.5;
+      speed = 3.4;
       frame = 0;
       started = false;
       dead = false;
@@ -516,18 +516,18 @@
       });
     }
 
-    function update() {
+    function update(step = 1) {
       if (!started || dead) return;
-      frame++;
+      frame += step;
       invuln = Math.max(0, invuln - 1);
 
-      speed = Math.min(10, 4.5 + frame * 0.0016);
+      speed = Math.min(7.5, 3.4 + frame * 0.0010);
 
-      player.x += (player.targetX - player.x) * 0.2;
+      player.x += (player.targetX - player.x) * 0.2 * step;
 
       if (!player.grounded) {
-        player.vy += player.gravity;
-        player.y += player.vy;
+        player.vy += player.gravity * step;
+        player.y += player.vy * step;
         if (player.y >= player.baseY) {
           player.y = player.baseY;
           player.vy = 0;
@@ -535,12 +535,12 @@
         }
       }
 
-      const spawnRate = Math.max(38, 68 - Math.floor(speed * 2.8));
+      const spawnRate = Math.max(48, 80 - Math.floor(speed * 2.2));
       if (frame % spawnRate === 0) spawnObstacle();
-      if (frame % 50 === 0) spawnOrb();
+      if (frame % 60 === 0) spawnOrb();
 
-      obstacles.forEach(o => o.y += speed);
-      orbs.forEach(o => o.y += speed);
+      obstacles.forEach(o => o.y += speed * step);
+      orbs.forEach(o => o.y += speed * step);
 
       if (frame % 5 === 0) {
         score += 1;
@@ -619,8 +619,13 @@
       drawParticles();
     }
 
-    function loop() {
-      update();
+    let lastTime = performance.now();
+    function loop(now) {
+      const dt = Math.min(32, now - lastTime); // cap to avoid huge jumps
+      lastTime = now;
+      // normalize around 60fps (16.67ms)
+      const step = dt / 16.67;
+      update(step);
       draw();
       requestAnimationFrame(loop);
     }
