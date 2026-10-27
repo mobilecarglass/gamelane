@@ -1,13 +1,15 @@
 # GameLane
 
-Modern responsive browser-game hub.  
-Drop a single `.html` file into `/games` → it appears automatically.
+Drop a single `.html` file into `/games` → push → it appears on the site.
 
-## Thumbnails (embedded)
+## How auto-add works
 
-Thumbnails live **inside** each game HTML file — no separate image folder.
+1. Put `games/my-game.html` (with meta comment at the top)
+2. `git add` + `git push`
+3. GitHub Actions runs `node scan-games.js`
+4. `games.json` is updated and the site lists the new game
 
-At the top of every game:
+### Meta block (required for title/thumb)
 
 ```html
 <!--
@@ -16,18 +18,25 @@ At the top of every game:
   tags: arcade, puzzle
   thumbnail: data:image/svg+xml;base64,....
 -->
+<!DOCTYPE html>
+...
 ```
 
-The scanner reads this block and writes `games.json`. The homepage uses the data URI directly.
+Thumbnail must be **embedded** as a data URI (not a separate file).
 
-## GitHub auto-scan
+## If a new game does not show up
 
-On push, GitHub Actions runs `node scan-games.js` and deploys. New games appear automatically.
-
-## Adding a game
-
-1. Create `games/my-game.html` (self-contained, with the meta block above)
-2. Commit & push
+1. Open the repo on GitHub → **Actions** tab  
+   - Confirm “Scan games” / “Scan games & Deploy” ran **green**
+2. Check that `games.json` in the repo includes your new game
+3. Hard-refresh the site (Ctrl+Shift+R)
+4. If you use **GitHub Pages**: Settings → Pages → Source = **GitHub Actions**
+5. Local test:
+   ```bash
+   node scan-games.js
+   npx serve .
+   ```
+   (Opening `index.html` as a file will not load `games.json`)
 
 ## Local
 

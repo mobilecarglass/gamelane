@@ -508,8 +508,13 @@
         if (!res.ok) throw new Error("games.json not found");
         allGames = await res.json();
       } catch (err) {
-        console.warn("Could not load games.json – using empty list. Run: node scan-games.js");
+        console.warn("Could not load games.json – using empty list. Run: node scan-games.js", err);
         allGames = [];
+        const empty = document.getElementById("empty-state");
+        if (empty) {
+          empty.hidden = false;
+          empty.innerHTML = "<p>No games loaded. If you just added a game, wait for GitHub Actions to finish, then hard-refresh.</p><p style=\"margin-top:0.5rem;font-size:0.85em;opacity:0.7\">Or run: <code>node scan-games.js</code></p>";
+        }
       }
       renderFilters();
       renderGames();
