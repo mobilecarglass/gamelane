@@ -1,5 +1,16 @@
 [
   {
+    "id": "Amazon-Adventures",
+    "title": "Amazon Adventures",
+    "description": "Explore the rainforest, collect acorns, and complete levels in this platform adventure.",
+    "url": "games/Amazon-Adventures.html",
+    "tags": [
+      "adventure",
+      "platformer"
+    ],
+    "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwZDNiMmUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDcxODE2Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0idXJsKCNza3kpIi8+CiAgPGVsbGlwc2UgY3g9IjYwIiBjeT0iMzAiIHJ4PSIxMDAiIHJ5PSI1NSIgZmlsbD0iIzFiNmI0MiIgb3BhY2l0eT0iMC44NSIvPgogIDxlbGxpcHNlIGN4PSIyMDAiIGN5PSIyMCIgcng9IjEyMCIgcnk9IjYwIiBmaWxsPSIjMjI4QjU1IiBvcGFjaXR5PSIwLjc1Ii8+CiAgPGVsbGlwc2UgY3g9IjM0MCIgY3k9IjM1IiByeD0iOTUiIHJ5PSI1MCIgZmlsbD0iIzFiNmI0MiIgb3BhY2l0eT0iMC44NSIvPgogIDxyZWN0IHg9IjAiIHk9IjE5NSIgd2lkdGg9IjQwMCIgaGVpZ2h0PSI1NSIgZmlsbD0iIzBhM2QyOCIvPgogIDxlbGxpcHNlIGN4PSIyMDAiIGN5PSIyMDAiIHJ4PSIyMjAiIHJ5PSIyMiIgZmlsbD0iIzEyNmI0MCIvPgogIDwhLS0gY2hhcmFjdGVyIC0tPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjE0NSIgcj0iMjAiIGZpbGw9IiNmZmQ5NzgiLz4KICA8cmVjdCB4PSIxODYiIHk9IjE2MyIgd2lkdGg9IjI4IiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzdlZThiMCIvPgogIDxyZWN0IHg9IjE5MCIgeT0iMTkyIiB3aWR0aD0iMTAiIGhlaWdodD0iMTQiIHJ4PSIzIiBmaWxsPSIjNWVjZjhhIi8+CiAgPHJlY3QgeD0iMjA0IiB5PSIxOTIiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiM1ZWNmOGEiLz4KICA8IS0tIHBhcGF5YSAtLT4KICA8ZWxsaXBzZSBjeD0iMjkwIiBjeT0iMTU1IiByeD0iMTIiIHJ5PSIxNSIgZmlsbD0iI2ZmOGMzYSIvPgogIDxlbGxpcHNlIGN4PSIyODYiIGN5PSIxNTAiIHJ4PSI0IiByeT0iNSIgZmlsbD0iI2ZmZDk3OCIgb3BhY2l0eT0iMC41Ii8+CiAgPHRleHQgeD0iMjAwIiB5PSIyMzYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNmZmY4ZTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCI+QW1hem9uIEFkdmVudHVyZXM8L3RleHQ+Cjwvc3ZnPg=="
+  },
+  {
     "id": "astro-dash",
     "title": "Astro Dash",
     "description": "Race through a space station as an astronaut. Switch lanes, jump obstacles, collect energy orbs.",
@@ -34,6 +45,18 @@
     "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iIzBmMTcyYSIvPgogIDxyZWN0IHg9IjI4MCIgeT0iMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjgwIiByeD0iNCIgZmlsbD0iIzIyZDNlZSIvPgogIDxyZWN0IHg9IjI4MCIgeT0iMTYwIiB3aWR0aD0iNTAiIGhlaWdodD0iOTAiIHJ4PSI0IiBmaWxsPSIjMjJkM2VlIi8+CiAgPGNpcmNsZSBjeD0iMTgwIiBjeT0iMTEwIiByPSIxOCIgZmlsbD0iI2ZiYmYyNCIvPgogIDxjaXJjbGUgY3g9IjE4OCIgY3k9IjEwNCIgcj0iNCIgZmlsbD0iIzBmMTExNyIvPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZTJlOGYwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPkZsYXBweSBCaXJkPC90ZXh0Pgo8L3N2Zz4="
   },
   {
+    "id": "maze-muncher",
+    "title": "Maze Muncher",
+    "description": "Eat all the dots in the maze. Avoid the chasers!",
+    "url": "games/maze-muncher.html",
+    "tags": [
+      "arcade",
+      "classic",
+      "maze"
+    ],
+    "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iIzBhMGUxNyIvPjxyZWN0IHg9IjgwIiB5PSI0MCIgd2lkdGg9IjI0MCIgaGVpZ2h0IjE3MCIgcng9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhiNWNmNiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iMTIwIiBjeT0iODAiIHI9IjQiIGZpbGw9IiNmZmQ5NzgiLz48Y2lyY2xlIGN4PSIxNjAiIGN5PSI4MCIgcj0iNCIgZmlsbD0iI2ZmZDk3OCIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjgwIiByPSI0IiBmaWxsPSIjZmZkOTc4Ii8+PGNpcmNsZSBjeD0iMTQwIiBjeT0iMTQwIiByPSIxNCIgZmlsbD0iI2ZiYmYyNCIvPjxjaXJjbGUgY3g9IjI2MCIgY3k9IjEyMCIgcj0iMTIiIGZpbGw9IiNmNDcyYjYiLz48dGV4dCB4PSIyMDAiIHk9IjIzNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2UyZThmMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCI+TWF6ZSBNdW5jaGVyPC90ZXh0Pjwvc3ZnPg=="
+  },
+  {
     "id": "memory",
     "title": "Memory Match",
     "description": "Flip cards and find matching pairs. How fast can you clear the board?",
@@ -43,6 +66,29 @@
       "casual"
     ],
     "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iIzBmMTExNyIvPgogIDxyZWN0IHg9IjcwIiB5PSI1MCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjkwIiByeD0iMTAiIGZpbGw9IiMxYzIxMjgiIHN0cm9rZT0iIzhiNWNmNiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHRleHQgeD0iMTA1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMzIiPvCfpoo8L3RleHQ+CiAgPHJlY3QgeD0iMTU1IiB5PSI1MCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjkwIiByeD0iMTAiIGZpbGw9IiMxYzIxMjgiIHN0cm9rZT0iIzMwMzYzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHRleHQgeD0iMTkwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiM0ODRmNTgiPj88L3RleHQ+CiAgPHJlY3QgeD0iMjQwIiB5PSI1MCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjkwIiByeD0iMTAiIGZpbGw9IiMxYzIxMjgiIHN0cm9rZT0iIzIyZDNlZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHRleHQgeD0iMjc1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMzIiPvCfkLg8L3RleHQ+CiAgPHRleHQgeD0iMjAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNlMmU4ZjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjcwMCI+TWVtb3J5IE1hdGNoPC90ZXh0Pgo8L3N2Zz4="
+  },
+  {
+    "id": "metro-rush",
+    "title": "Metro Rush",
+    "description": "Sprint down the tracks. Dodge trains, grab coins, don't get caught!",
+    "url": "games/metro-rush.html",
+    "tags": [
+      "arcade",
+      "endless",
+      "runner"
+    ],
+    "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InNreSIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0N2FiZjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM5M2M1ZmQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0idXJsKCNza3kpIi8+PHBhdGggZD0iTTAgMTIwIEwxNjAgODAgTDIwMCAyNTAgTDAgMjUwIFoiIGZpbGw9IiM2YjcyODAiLz48cGF0aCBkPSJNNDAwIDEyMCBMMjQwIDgwIEwyMDAgMjUwIEw0MDAgMjUwIFoiIGZpbGw9IiM2YjcyODAiLz48cGF0aCBkPSJNMTYwIDgwIEwyNDAgODAgTDIwMCAyNTAgWiIgZmlsbD0iIzU1NWU2YiIvPjxjaXJjbGUgY3g9IjE0MCIgY3k9IjE2MCIgcj0iOCIgZmlsbD0iI2ZiYmYyNCIvPjxjaXJjbGUgY3g9IjE3MCIgY3k9IjE4NSIgcj0iOCIgZmlsbD0iI2ZiYmYyNCIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTYiIGZpbGw9IiMzYjgyZjYiLz48dGV4dCB4PSIyMDAiIHk9IjQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIiBmb250LWZhbWlseT0ic3lzdGVtLXVpIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5NZXRybyBSdXNoPC90ZXh0Pjwvc3ZnPg=="
+  },
+  {
+    "id": "ring-rumble",
+    "title": "Ring Rumble",
+    "description": "One-on-one arena fight. Punch, kick, block. KO your rival!",
+    "url": "games/ring-rumble.html",
+    "tags": [
+      "action",
+      "fighting"
+    ],
+    "thumbnail": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjUwIiBmaWxsPSJub25lIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iIzBhMGUxNyIvPjxyZWN0IHg9IjgwIiB5PSIxNjAiIHdpZHRoPSIyNDAiIGhlaWdodD0iMjAiIHJ4PSI0IiBmaWxsPSIjMzMzIi8+PGNpcmNsZSBjeD0iMTQwIiBjeT0iMTMwIiByPSIyNCIgZmlsbD0iIzIyZDNlZSIvPjxjaXJjbGUgY3g9IjI2MCIgY3k9IjEzMCIgcj0iMjQiIGZpbGw9IiNmNDcyYjYiLz48cmVjdCB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMTQiIHJ4PSI0IiBmaWxsPSIjMjJkM2VlIi8+PHJlY3QgeD0iMjQwIiB5PSI0MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxNCIgcng9IjQiIGZpbGw9IiNmNDcyYjYiLz48dGV4dCB4PSIyMDAiIHk9IjIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2UyZThmMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCI+UmluZyBSdW1ibGU8L3RleHQ+PC9zdmc+"
   },
   {
     "id": "snake",
