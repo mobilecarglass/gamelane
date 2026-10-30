@@ -64,11 +64,10 @@ canvas.width = cols * CS;
 canvas.height = rows * CS;
 
 let player, ghosts, dots, score, started, dead, won, dir, nextDir;
-let tick = 0;
-
-// Slower pace: higher = slower movement
-const PLAYER_INTERVAL = 32;  // player pace
-const GHOST_INTERVAL = 46;   // ghosts slower than player
+// Time-based so speed matches on 60Hz phones and 120Hz desktops
+const PLAYER_MOVE_MS = 530;  // ~same feel as 32 frames @ 60fps
+const GHOST_MOVE_MS = 770;   // ~same feel as 46 frames @ 60fps
+let playerAcc = 0, ghostAcc = 0, lastTime = 0;
 
 function reset() {
   player = { x: 1, y: 1 };
@@ -87,7 +86,9 @@ function reset() {
   started = false;
   dead = false;
   won = false;
-  tick = 0;
+  playerAcc = 0;
+  ghostAcc = 0;
+  lastTime = 0;
   document.getElementById('score').textContent = 0;
   document.getElementById('left').textContent = dots.length;
   show('Maze Muncher', 'Eat all the dots. Avoid ghosts.');
@@ -167,67 +168,78 @@ function draw() {
   });
 }
 
-function update() {
-  if (!started || dead || won) return;
-  tick++;
-
-  // Player moves slower
-  if (tick % PLAYER_INTERVAL === 0) {
-    const nd = nextDir;
-    if (!wall(player.x + nd.x, player.y + nd.y)) dir = { ...nd };
-    if (!wall(player.x + dir.x, player.y + dir.y)) {
-      player.x += dir.x;
-      player.y += dir.y;
-    }
-    dots = dots.filter(d => {
-      if (d.x === player.x && d.y === player.y) {
-        score += 10;
-        document.getElementById('score').textContent = score;
-        return false;
-      }
-      return true;
-    });
-    document.getElementById('left').textContent = dots.length;
-    if (dots.length === 0) {
-      won = true;
-      show('Clear!', 'Score: ' + score);
-    }
-    // Check collision after player move
-    for (const g of ghosts) {
-      if (g.x === player.x && g.y === player.y) {
-        dead = true;
-        show('Caught!', 'Score: ' + score);
-        return;
-      }
-    }
+function movePlayer() {
+  const nd = nextDir;
+  if (!wall(player.x + nd.x, player.y + nd.y)) dir = { ...nd };
+  if (!wall(player.x + dir.x, player.y + dir.y)) {
+    player.x += dir.x;
+    player.y += dir.y;
   }
-
-  // Ghosts move even slower
-  if (tick % GHOST_INTERVAL === 0) {
-    ghosts.forEach(g => {
-      const opts = [
-        { x: 1, y: 0 }, { x: -1, y: 0 },
-        { x: 0, y: 1 }, { x: 0, y: -1 }
-      ].filter(o => !wall(g.x + o.x, g.y + o.y));
-      if (!opts.length) return;
-      opts.sort((a, b) => {
-        const da = Math.abs(g.x + a.x - player.x) + Math.abs(g.y + a.y - player.y);
-        const db = Math.abs(g.x + b.x - player.x) + Math.abs(g.y + b.y - player.y);
-        return da - db;
-      });
-      const pick = Math.random() < 0.6 ? opts[0] : opts[Math.floor(Math.random() * opts.length)];
-      g.x += pick.x;
-      g.y += pick.y;
-      if (g.x === player.x && g.y === player.y) {
-        dead = true;
-        show('Caught!', 'Score: ' + score);
-      }
-    });
+  dots = dots.filter(d => {
+    if (d.x === player.x && d.y === player.y) {
+      score += 10;
+      document.getElementById('score').textContent = score;
+      return false;
+    }
+    return true;
+  });
+  document.getElementById('left').textContent = dots.length;
+  if (dots.length === 0) {
+    won = true;
+    show('Clear!', 'Score: ' + score);
+  }
+  for (const g of ghosts) {
+    if (g.x === player.x && g.y === player.y) {
+      dead = true;
+      show('Caught!', 'Score: ' + score);
+      return;
+    }
   }
 }
 
-function loop() {
-  update();
+function moveGhosts() {
+  ghosts.forEach(g => {
+    const opts = [
+      { x: 1, y: 0 }, { x: -1, y: 0 },
+      { x: 0, y: 1 }, { x: 0, y: -1 }
+    ].filter(o => !wall(g.x + o.x, g.y + o.y));
+    if (!opts.length) return;
+    opts.sort((a, b) => {
+      const da = Math.abs(g.x + a.x - player.x) + Math.abs(g.y + a.y - player.y);
+      const db = Math.abs(g.x + b.x - player.x) + Math.abs(g.y + b.y - player.y);
+      return da - db;
+    });
+    const pick = Math.random() < 0.6 ? opts[0] : opts[Math.floor(Math.random() * opts.length)];
+    g.x += pick.x;
+    g.y += pick.y;
+    if (g.x === player.x && g.y === player.y) {
+      dead = true;
+      show('Caught!', 'Score: ' + score);
+    }
+  });
+}
+
+function update(dt) {
+  if (!started || dead || won) return;
+  playerAcc += dt;
+  ghostAcc += dt;
+  while (playerAcc >= PLAYER_MOVE_MS) {
+    playerAcc -= PLAYER_MOVE_MS;
+    movePlayer();
+    if (dead || won) return;
+  }
+  while (ghostAcc >= GHOST_MOVE_MS) {
+    ghostAcc -= GHOST_MOVE_MS;
+    moveGhosts();
+    if (dead || won) return;
+  }
+}
+
+function loop(now) {
+  if (!lastTime) lastTime = now;
+  const dt = Math.min(50, now - lastTime); // cap so tab-switch doesn't jump
+  lastTime = now;
+  update(dt);
   draw();
   requestAnimationFrame(loop);
 }
