@@ -84,28 +84,49 @@
     function spawn(x,y){ for(let i=0;i<12;i++) particles.push({x:x*size+size/2,y:y*size+size/2,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,life:1,r:2+Math.random()*3}); }
 
     function draw() {
-      ctx.fillStyle = '#0a0e17'; ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+      const bg = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 40, canvas.width/2, canvas.height/2, canvas.width*0.75);
+      bg.addColorStop(0, '#12182a'); bg.addColorStop(1, '#06080d');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = 'rgba(139,92,246,0.07)'; ctx.lineWidth = 1;
       for (let i=0;i<=cols;i++){ ctx.beginPath(); ctx.moveTo(i*size,0); ctx.lineTo(i*size,canvas.height); ctx.stroke(); }
       for (let i=0;i<=rows;i++){ ctx.beginPath(); ctx.moveTo(0,i*size); ctx.lineTo(canvas.width,i*size); ctx.stroke(); }
 
       const fx=food.x*size+size/2, fy=food.y*size+size/2;
-      const glow=ctx.createRadialGradient(fx,fy,2,fx,fy,24);
-      glow.addColorStop(0,'rgba(34,211,238,0.7)'); glow.addColorStop(1,'transparent');
-      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(fx,fy,24,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#22d3ee'; ctx.beginPath(); ctx.arc(fx,fy,11,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#a5f3fc'; ctx.beginPath(); ctx.arc(fx-3,fy-3,4,0,Math.PI*2); ctx.fill();
+      const glow=ctx.createRadialGradient(fx,fy,2,fx,fy,28);
+      glow.addColorStop(0,'rgba(34,211,238,0.85)'); glow.addColorStop(0.5,'rgba(34,211,238,0.2)'); glow.addColorStop(1,'transparent');
+      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(fx,fy,28,0,Math.PI*2); ctx.fill();
+      const foodG = ctx.createRadialGradient(fx-3,fy-3,1,fx,fy,12);
+      foodG.addColorStop(0,'#a5f3fc'); foodG.addColorStop(0.6,'#22d3ee'); foodG.addColorStop(1,'#0891b2');
+      ctx.fillStyle=foodG; ctx.beginPath(); ctx.arc(fx,fy,12,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.arc(fx-4,fy-4,4,0,Math.PI*2); ctx.fill();
 
       snake.forEach((s,i)=>{
         const t=i/Math.max(snake.length-1,1);
-        ctx.fillStyle=i===0?'#c4b5fd':`rgba(167,139,250,${1-t*0.5})`;
-        const pad=i===0?2:3.5;
-        ctx.beginPath(); ctx.roundRect(s.x*size+pad,s.y*size+pad,size-pad*2,size-pad*2,7); ctx.fill();
-        if(i===0){
+        const px = s.x*size, py = s.y*size;
+        ctx.fillStyle = 'rgba(0,0,0,0.28)';
+        ctx.beginPath(); ctx.roundRect(px+4, py+5, size-6, size-6, 8); ctx.fill();
+        if (i===0) {
+          const headG = ctx.createRadialGradient(px+10,py+8,2,px+size/2,py+size/2,18);
+          headG.addColorStop(0,'#e9d5ff'); headG.addColorStop(1,'#8b5cf6');
+          ctx.fillStyle = headG;
+          ctx.beginPath(); ctx.roundRect(px+2,py+2,size-4,size-4,9); ctx.fill();
           ctx.fillStyle='#06080d';
           const ox=dir.x*5, oy=dir.y*5;
-          ctx.beginPath(); ctx.arc(s.x*size+size/2-5+ox,s.y*size+size/2-4+oy,3,0,Math.PI*2); ctx.fill();
-          ctx.beginPath(); ctx.arc(s.x*size+size/2+5+ox,s.y*size+size/2-4+oy,3,0,Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px+size/2-5+ox,py+size/2-3+oy,3.2,0,Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px+size/2+5+ox,py+size/2-3+oy,3.2,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#fff';
+          ctx.beginPath(); ctx.arc(px+size/2-4+ox,py+size/2-4+oy,1.1,0,Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px+size/2+6+ox,py+size/2-4+oy,1.1,0,Math.PI*2); ctx.fill();
+        } else {
+          const alpha = 1 - t*0.55;
+          const bodyG = ctx.createLinearGradient(px,py,px+size,py+size);
+          bodyG.addColorStop(0, `rgba(196,181,253,${alpha})`);
+          bodyG.addColorStop(1, `rgba(139,92,246,${alpha*0.85})`);
+          ctx.fillStyle = bodyG;
+          const pad = 3.5;
+          ctx.beginPath(); ctx.roundRect(px+pad,py+pad,size-pad*2,size-pad*2,7); ctx.fill();
+          ctx.fillStyle = `rgba(255,255,255,${0.12*alpha})`;
+          ctx.beginPath(); ctx.roundRect(px+pad+2,py+pad+2,size-pad*2-6, (size-pad*2)*0.35, 4); ctx.fill();
         }
       });
       particles.forEach(p=>{ ctx.globalAlpha=p.life; ctx.fillStyle='#22d3ee'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; });
