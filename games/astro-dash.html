@@ -250,10 +250,10 @@
         });
       }
       score = 0;
-      speed = 5.8;
+      speed = 3.6;
       frame = 0;
-      obsTimer = 20;
-      orbTimer = 10;
+      obsTimer = 40;
+      orbTimer = 20;
       scoreAcc = 0;
       started = false;
       dead = false;
@@ -343,95 +343,212 @@
 
     function drawPlayer() {
       const p = player;
-      p.anim += 0.2;
+      p.anim += 0.22;
 
       ctx.save();
       ctx.translate(p.x, p.y);
 
-      // shadow
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      // Soft ground shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.beginPath();
-      ctx.ellipse(0, 34, 22, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 36, 24 * (p.grounded ? 1 : 0.7), 8, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // jetpack flame when airborne
+      // Jetpack exhaust when airborne
       if (!p.grounded) {
-        const flame = ctx.createRadialGradient(0, 28, 2, 0, 40, 28);
-        flame.addColorStop(0, 'rgba(34,211,238,0.7)');
-        flame.addColorStop(0.4, 'rgba(139,92,246,0.35)');
+        const flame = ctx.createRadialGradient(0, 30, 1, 0, 48, 32);
+        flame.addColorStop(0, 'rgba(255,255,255,0.9)');
+        flame.addColorStop(0.2, 'rgba(34,211,238,0.8)');
+        flame.addColorStop(0.5, 'rgba(139,92,246,0.4)');
         flame.addColorStop(1, 'transparent');
         ctx.fillStyle = flame;
         ctx.beginPath();
-        ctx.arc(0, 32, 28, 0, Math.PI * 2);
+        ctx.arc(0, 36, 30, 0, Math.PI * 2);
         ctx.fill();
-        // small particles
+        // Flickering particles
         ctx.fillStyle = '#67e8f9';
-        ctx.beginPath();
-        ctx.arc(-4, 36 + Math.sin(p.anim*2)*3, 3, 0, Math.PI*2);
-        ctx.arc(5, 38 + Math.cos(p.anim*2)*3, 2.5, 0, Math.PI*2);
-        ctx.fill();
+        for (let i = 0; i < 5; i++) {
+          const fx = (Math.sin(p.anim * 3 + i) * 8);
+          const fy = 34 + i * 5 + Math.cos(p.anim * 4 + i) * 3;
+          ctx.beginPath();
+          ctx.arc(fx, fy, 2.5 - i * 0.3, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
-      // helmet / body
-      ctx.fillStyle = '#e8edf5';
-      ctx.beginPath();
-      ctx.roundRect(-18, -24, 36, 42, 12);
-      ctx.fill();
+      const leg = p.grounded ? Math.sin(p.anim) * 5 : 0;
+      const arm = Math.sin(p.anim) * 3;
 
-      // chest panel
-      ctx.fillStyle = '#c5cdd8';
+      // --- Jetpack tanks (behind body) ---
+      ctx.fillStyle = '#475569';
       ctx.beginPath();
-      ctx.roundRect(-10, 0, 20, 14, 4);
+      ctx.roundRect(-26, -8, 11, 30, 5);
+      ctx.roundRect(15, -8, 11, 30, 5);
       ctx.fill();
-      ctx.fillStyle = '#22d3ee';
+      // Tank highlights
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(-24, -6, 4, 20);
+      ctx.fillRect(17, -6, 4, 20);
+      // Nozzles
+      ctx.fillStyle = '#1e293b';
       ctx.beginPath();
-      ctx.arc(0, 7, 3.5, 0, Math.PI * 2);
+      ctx.roundRect(-24, 20, 7, 8, 2);
+      ctx.roundRect(17, 20, 7, 8, 2);
       ctx.fill();
+      // Cyan fuel lines
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-20, 0); ctx.lineTo(-20, 16);
+      ctx.moveTo(20, 0); ctx.lineTo(20, 16);
+      ctx.stroke();
 
-      // visor
-      const vg = ctx.createLinearGradient(-14, -20, 14, -2);
-      vg.addColorStop(0, '#22d3ee');
-      vg.addColorStop(0.5, '#818cf8');
-      vg.addColorStop(1, '#8b5cf6');
-      ctx.fillStyle = vg;
+      // --- Legs ---
+      ctx.fillStyle = '#cbd5e1';
       ctx.beginPath();
-      ctx.roundRect(-14, -20, 28, 16, 7);
+      ctx.roundRect(-15, 14, 12, 16 + leg, 5);
+      ctx.roundRect(3, 14, 12, 16 - leg, 5);
       ctx.fill();
-      // visor shine
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.beginPath();
-      ctx.roundRect(-11, -18, 12, 5, 3);
-      ctx.fill();
-
-      // side tanks
+      // Knee pads
       ctx.fillStyle = '#94a3b8';
       ctx.beginPath();
-      ctx.roundRect(-24, -6, 9, 26, 4);
+      ctx.roundRect(-14, 20 + leg * 0.5, 10, 5, 2);
+      ctx.roundRect(4, 20 - leg * 0.5, 10, 5, 2);
       ctx.fill();
+
+      // Boots
+      ctx.fillStyle = '#6d28d9';
       ctx.beginPath();
-      ctx.roundRect(15, -6, 9, 26, 4);
+      ctx.roundRect(-16, 28 + leg, 14, 9, 3);
+      ctx.roundRect(2, 28 - leg, 14, 9, 3);
+      ctx.fill();
+      // Boot soles
+      ctx.fillStyle = '#4c1d95';
+      ctx.fillRect(-16, 34 + leg, 14, 3);
+      ctx.fillRect(2, 34 - leg, 14, 3);
+      // Boot lights
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath();
+      ctx.arc(-9, 31 + leg, 2, 0, Math.PI * 2);
+      ctx.arc(9, 31 - leg, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // --- Main body / suit ---
+      const bodyG = ctx.createLinearGradient(-20, -28, 20, 20);
+      bodyG.addColorStop(0, '#f1f5f9');
+      bodyG.addColorStop(0.5, '#e2e8f0');
+      bodyG.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = bodyG;
+      ctx.beginPath();
+      ctx.roundRect(-19, -26, 38, 44, 13);
+      ctx.fill();
+
+      // Suit seams
+      ctx.strokeStyle = 'rgba(100,116,139,0.4)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(0, -24); ctx.lineTo(0, 16);
+      ctx.stroke();
+
+      // Chest control panel
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.roundRect(-12, -2, 24, 16, 5);
+      ctx.fill();
+      // Panel screen
+      const screenG = ctx.createLinearGradient(-10, 0, 10, 12);
+      screenG.addColorStop(0, '#0ea5e9');
+      screenG.addColorStop(1, '#6366f1');
+      ctx.fillStyle = screenG;
+      ctx.beginPath();
+      ctx.roundRect(-10, 0, 20, 10, 3);
+      ctx.fill();
+      // Status lights
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath(); ctx.arc(-7, 12, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#4ade80';
+      ctx.beginPath(); ctx.arc(0, 12, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath(); ctx.arc(7, 12, 2, 0, Math.PI * 2); ctx.fill();
+
+      // Shoulder pads
+      ctx.fillStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.ellipse(-18, -14, 8, 6, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(18, -14, 8, 6, 0.3, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#64748b';
-      ctx.fillRect(-22, 2, 5, 8);
-      ctx.fillRect(17, 2, 5, 8);
-
-      // legs
-      const leg = p.grounded ? Math.sin(p.anim) * 4 : 0;
-      ctx.fillStyle = '#d1d9e6';
       ctx.beginPath();
-      ctx.roundRect(-14, 16, 11, 14 + leg, 4);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.roundRect(3, 16, 11, 14 - leg, 4);
+      ctx.ellipse(-18, -14, 5, 3.5, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(18, -14, 5, 3.5, 0.3, 0, Math.PI * 2);
       ctx.fill();
 
-      // boots
+      // Arms
+      ctx.fillStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.roundRect(-28, -10 + arm * 0.3, 10, 22, 5);
+      ctx.roundRect(18, -10 - arm * 0.3, 10, 22, 5);
+      ctx.fill();
+      // Gloves
       ctx.fillStyle = '#7c3aed';
       ctx.beginPath();
-      ctx.roundRect(-15, 28 + leg, 13, 8, 3);
+      ctx.roundRect(-29, 10 + arm * 0.3, 12, 10, 4);
+      ctx.roundRect(17, 10 - arm * 0.3, 12, 10, 4);
       ctx.fill();
+
+      // --- Helmet ---
+      // Helmet dome
+      const helmG = ctx.createRadialGradient(-6, -30, 2, 0, -22, 22);
+      helmG.addColorStop(0, '#f8fafc');
+      helmG.addColorStop(0.6, '#e2e8f0');
+      helmG.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = helmG;
       ctx.beginPath();
-      ctx.roundRect(2, 28 - leg, 13, 8, 3);
+      ctx.arc(0, -22, 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Visor frame
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.roundRect(-15, -32, 30, 18, 8);
+      ctx.stroke();
+
+      // Visor glass
+      const vg = ctx.createLinearGradient(-14, -30, 14, -14);
+      vg.addColorStop(0, '#22d3ee');
+      vg.addColorStop(0.35, '#6366f1');
+      vg.addColorStop(0.7, '#8b5cf6');
+      vg.addColorStop(1, '#a78bfa');
+      ctx.fillStyle = vg;
+      ctx.beginPath();
+      ctx.roundRect(-14, -31, 28, 16, 7);
+      ctx.fill();
+
+      // Visor reflections
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.beginPath();
+      ctx.roundRect(-12, -29, 11, 5, 3);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.roundRect(2, -26, 8, 3, 2);
+      ctx.fill();
+
+      // Antenna
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(12, -38);
+      ctx.lineTo(16, -48);
+      ctx.stroke();
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath();
+      ctx.arc(16, -48, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(34,211,238,0.4)';
+      ctx.beginPath();
+      ctx.arc(16, -48, 6, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -524,7 +641,7 @@
       frame += step;
       invuln = Math.max(0, invuln - 1);
 
-      speed = Math.min(11.0, 5.8 + frame * 0.0020);
+      speed = Math.min(7.2, 3.6 + frame * 0.0012);
 
       player.x += (player.targetX - player.x) * 0.2 * step;
 
@@ -538,12 +655,11 @@
         }
       }
 
-      const spawnRate = Math.max(28, 50 - speed * 2.2);
+      const spawnRate = Math.max(45, 75 - speed * 2.5);
       obsTimer += step;
       orbTimer += step;
       if (obsTimer >= spawnRate) { obsTimer = 0; spawnObstacle(); }
-      if (orbTimer >= 35) { orbTimer = 0;
-      scoreAcc = 0; spawnOrb(); }
+      if (orbTimer >= 55) { orbTimer = 0; spawnOrb(); }
 
       obstacles.forEach(o => o.y += speed * step);
       orbs.forEach(o => o.y += speed * step);

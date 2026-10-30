@@ -87,10 +87,10 @@
       obstacles = [];
       coins = [];
       particles = [];
-      score = 0; coinCount = 0; speed = 0.012; dist = 0;
+      score = 0; coinCount = 0; speed = 0.0075; dist = 0;
       started = false; dead = false;
       jumpT = 0; anim = 0;
-      spawnTimer = 0.4; coinTimer = 0.2;
+      spawnTimer = 0.7; coinTimer = 0.35;
       document.getElementById('score').textContent = 0;
       document.getElementById('coins').textContent = 0;
       show('Metro Rush', 'Dodge trains. Grab coins. Stay on the tracks.');
@@ -415,78 +415,199 @@
 
       const x = player.visX;
       const y = p.y - playerJumpY() - 12;
-      const s = 1.2;
+      const s = 1.25;
 
-      // Shadow
-      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      // Soft ground shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
       ctx.beginPath();
-      ctx.ellipse(x, p.y + 10, 24 * s * (1 - player.jump * 0.4), 9, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, p.y + 12, 26 * s * (1 - player.jump * 0.45), 10, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Legs (run cycle)
-      anim += 0.38;
-      const leg = Math.sin(anim) * 10;
-      ctx.fillStyle = '#1a252f';
+      // Run cycle
+      anim += 0.4;
+      const legSwing = Math.sin(anim) * 12;
+      const armSwing = Math.sin(anim) * 8;
+
+      // --- Legs ---
       // Left leg
       ctx.save();
-      ctx.translate(x - 10 * s, y - 12 * s);
-      ctx.rotate(leg * 0.06);
-      ctx.fillRect(-5 * s, 0, 10 * s, 20 * s + Math.max(0, leg));
+      ctx.translate(x - 9 * s, y - 10 * s);
+      ctx.rotate(legSwing * 0.05);
+      const legG = ctx.createLinearGradient(0, 0, 0, 22 * s);
+      legG.addColorStop(0, '#2c3e50');
+      legG.addColorStop(1, '#1a252f');
+      ctx.fillStyle = legG;
+      ctx.beginPath();
+      ctx.roundRect(-6 * s, 0, 12 * s, 22 * s + Math.max(0, legSwing * 0.4), 4);
+      ctx.fill();
+      // Shoe
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.roundRect(-7 * s, 20 * s + Math.max(0, legSwing * 0.3), 14 * s, 7 * s, 3);
+      ctx.fill();
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillRect(-6 * s, 21 * s + Math.max(0, legSwing * 0.3), 12 * s, 2 * s);
       ctx.restore();
+
       // Right leg
       ctx.save();
-      ctx.translate(x + 10 * s, y - 12 * s);
-      ctx.rotate(-leg * 0.06);
-      ctx.fillRect(-5 * s, 0, 10 * s, 20 * s + Math.max(0, -leg));
+      ctx.translate(x + 9 * s, y - 10 * s);
+      ctx.rotate(-legSwing * 0.05);
+      ctx.fillStyle = legG;
+      ctx.beginPath();
+      ctx.roundRect(-6 * s, 0, 12 * s, 22 * s + Math.max(0, -legSwing * 0.4), 4);
+      ctx.fill();
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.roundRect(-7 * s, 20 * s + Math.max(0, -legSwing * 0.3), 14 * s, 7 * s, 3);
+      ctx.fill();
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillRect(-6 * s, 21 * s + Math.max(0, -legSwing * 0.3), 12 * s, 2 * s);
       ctx.restore();
 
-      // Body (jacket)
-      const bodyG = ctx.createLinearGradient(x - 16 * s, y - 55 * s, x + 16 * s, y - 10 * s);
-      bodyG.addColorStop(0, '#3498db');
-      bodyG.addColorStop(1, '#1a5276');
+      // --- Body / Jacket ---
+      const bodyG = ctx.createLinearGradient(x - 18 * s, y - 58 * s, x + 18 * s, y - 8 * s);
+      bodyG.addColorStop(0, '#3b82f6');
+      bodyG.addColorStop(0.5, '#2563eb');
+      bodyG.addColorStop(1, '#1e3a8a');
       ctx.fillStyle = bodyG;
       ctx.beginPath();
-      ctx.roundRect(x - 15 * s, y - 52 * s, 30 * s, 40 * s, 9);
+      ctx.roundRect(x - 16 * s, y - 54 * s, 32 * s, 44 * s, 10);
       ctx.fill();
 
-      // Jacket details
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 1.5;
+      // Jacket zipper
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
-      ctx.moveTo(x, y - 50 * s);
-      ctx.lineTo(x, y - 16 * s);
+      ctx.moveTo(x, y - 52 * s);
+      ctx.lineTo(x, y - 14 * s);
       ctx.stroke();
+      // Zipper pull
+      ctx.fillStyle = '#f1c40f';
+      ctx.beginPath();
+      ctx.arc(x, y - 28 * s, 2.5 * s, 0, Math.PI * 2);
+      ctx.fill();
 
-      // Arms
-      ctx.fillStyle = '#2980b9';
-      ctx.fillRect(x - 22 * s, y - 48 * s, 8 * s, 22 * s);
-      ctx.fillRect(x + 14 * s, y - 48 * s, 8 * s, 22 * s);
+      // Collar
+      ctx.fillStyle = '#1e40af';
+      ctx.beginPath();
+      ctx.moveTo(x - 14 * s, y - 52 * s);
+      ctx.lineTo(x - 6 * s, y - 58 * s);
+      ctx.lineTo(x, y - 54 * s);
+      ctx.lineTo(x + 6 * s, y - 58 * s);
+      ctx.lineTo(x + 14 * s, y - 52 * s);
+      ctx.closePath();
+      ctx.fill();
 
-      // Head
-      const headG = ctx.createRadialGradient(x - 3, y - 62 * s, 2, x, y - 58 * s, 14 * s);
-      headG.addColorStop(0, '#fad7a0');
+      // Pocket flaps
+      ctx.fillStyle = 'rgba(0,0,0,0.2)';
+      ctx.beginPath();
+      ctx.roundRect(x - 13 * s, y - 30 * s, 10 * s, 8 * s, 2);
+      ctx.roundRect(x + 3 * s, y - 30 * s, 10 * s, 8 * s, 2);
+      ctx.fill();
+
+      // --- Arms ---
+      // Left arm
+      ctx.save();
+      ctx.translate(x - 16 * s, y - 48 * s);
+      ctx.rotate(-armSwing * 0.04);
+      const armG = ctx.createLinearGradient(0, 0, 0, 24 * s);
+      armG.addColorStop(0, '#3b82f6');
+      armG.addColorStop(1, '#1d4ed8');
+      ctx.fillStyle = armG;
+      ctx.beginPath();
+      ctx.roundRect(-7 * s, 0, 10 * s, 24 * s, 5);
+      ctx.fill();
+      // Hand
+      ctx.fillStyle = '#f5cba7';
+      ctx.beginPath();
+      ctx.arc(-2 * s, 24 * s, 5 * s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Right arm
+      ctx.save();
+      ctx.translate(x + 16 * s, y - 48 * s);
+      ctx.rotate(armSwing * 0.04);
+      ctx.fillStyle = armG;
+      ctx.beginPath();
+      ctx.roundRect(-3 * s, 0, 10 * s, 24 * s, 5);
+      ctx.fill();
+      ctx.fillStyle = '#f5cba7';
+      ctx.beginPath();
+      ctx.arc(2 * s, 24 * s, 5 * s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // --- Head ---
+      const headG = ctx.createRadialGradient(x - 4 * s, y - 64 * s, 2, x, y - 60 * s, 15 * s);
+      headG.addColorStop(0, '#fdebd0');
+      headG.addColorStop(0.7, '#f5cba7');
       headG.addColorStop(1, '#e0a96d');
       ctx.fillStyle = headG;
       ctx.beginPath();
-      ctx.arc(x, y - 60 * s, 14 * s, 0, Math.PI * 2);
+      ctx.arc(x, y - 62 * s, 15 * s, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ears
+      ctx.fillStyle = '#e0a96d';
+      ctx.beginPath();
+      ctx.arc(x - 14 * s, y - 62 * s, 4 * s, 0, Math.PI * 2);
+      ctx.arc(x + 14 * s, y - 62 * s, 4 * s, 0, Math.PI * 2);
       ctx.fill();
 
       // Cap
       ctx.fillStyle = '#c0392b';
       ctx.beginPath();
-      ctx.arc(x, y - 68 * s, 13 * s, Math.PI, 0);
+      ctx.arc(x, y - 70 * s, 14 * s, Math.PI, 0);
       ctx.fill();
-      ctx.fillRect(x - 15 * s, y - 70 * s, 30 * s, 5 * s);
-      // Cap brim
+      // Cap top band
       ctx.fillStyle = '#922b21';
-      ctx.fillRect(x - 16 * s, y - 67 * s, 32 * s, 3 * s);
+      ctx.fillRect(x - 15 * s, y - 72 * s, 30 * s, 5 * s);
+      // Brim
+      ctx.fillStyle = '#7b241c';
+      ctx.beginPath();
+      ctx.ellipse(x, y - 68 * s, 17 * s, 4 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Cap logo
+      ctx.fillStyle = '#f1c40f';
+      ctx.beginPath();
+      ctx.arc(x, y - 74 * s, 3.5 * s, 0, Math.PI * 2);
+      ctx.fill();
 
-      // Eyes
+      // Eyes with whites
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.ellipse(x - 5.5 * s, y - 64 * s, 4 * s, 4.5 * s, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 5.5 * s, y - 64 * s, 4 * s, 4.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Pupils
       ctx.fillStyle = '#1a252f';
       ctx.beginPath();
-      ctx.arc(x - 5 * s, y - 62 * s, 2.2 * s, 0, Math.PI * 2);
-      ctx.arc(x + 5 * s, y - 62 * s, 2.2 * s, 0, Math.PI * 2);
+      ctx.arc(x - 5 * s, y - 63.5 * s, 2.4 * s, 0, Math.PI * 2);
+      ctx.arc(x + 6 * s, y - 63.5 * s, 2.4 * s, 0, Math.PI * 2);
       ctx.fill();
+      // Eye shine
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(x - 4 * s, y - 64.5 * s, 1 * s, 0, Math.PI * 2);
+      ctx.arc(x + 7 * s, y - 64.5 * s, 1 * s, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Smile
+      ctx.strokeStyle = '#c0392b';
+      ctx.lineWidth = 1.5 * s;
+      ctx.beginPath();
+      ctx.arc(x, y - 57 * s, 5 * s, 0.15, Math.PI - 0.15);
+      ctx.stroke();
+
+      // Backpack / bag strap
+      ctx.strokeStyle = '#7f8c8d';
+      ctx.lineWidth = 3 * s;
+      ctx.beginPath();
+      ctx.moveTo(x - 12 * s, y - 50 * s);
+      ctx.lineTo(x - 18 * s, y - 20 * s);
+      ctx.stroke();
     }
 
     function drawParticles() {
@@ -517,7 +638,7 @@
       if (!started || dead) return;
       const step = dt / 16.67;
       dist += speed * step;
-      speed = Math.min(0.028, 0.012 + dist * 0.000015);
+      speed = Math.min(0.018, 0.0075 + dist * 0.000009);
       score = Math.floor(dist * 80);
       document.getElementById('score').textContent = score;
 
@@ -530,8 +651,8 @@
 
       spawnTimer -= speed * step;
       coinTimer -= speed * step;
-      if (spawnTimer <= 0) { spawnTrain(); spawnTimer = 0.55 + Math.random() * 0.35; }
-      if (coinTimer <= 0) { spawnCoins(); coinTimer = 0.4 + Math.random() * 0.4; }
+      if (spawnTimer <= 0) { spawnTrain(); spawnTimer = 0.85 + Math.random() * 0.5; }
+      if (coinTimer <= 0) { spawnCoins(); coinTimer = 0.55 + Math.random() * 0.45; }
 
       obstacles.forEach(o => o.z -= speed * step);
       coins.forEach(c => c.z -= speed * step);
